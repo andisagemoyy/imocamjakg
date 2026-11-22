@@ -176,6 +176,12 @@
 @media(max-width:560px){.monthly-smartcard{padding:13px}.monthly-card-grid{grid-template-columns:1fr;gap:12px}.monthly-card-preview{height:160px}}
 
 .cuti{background:#e6f1ff;color:#24619d}.sakit{background:#fff0ee;color:#ab5146}.day-card[data-shift="CUTI"]{background:#edf5ff;border-color:#bdd5f1;border-top-color:#5588bc}.day-card[data-shift="SAKIT"]{background:#fff3f1;border-color:#edc6c0;border-top-color:#c9786c}.day-card[data-shift="CUTI"]>input{color:#24619d}.day-card[data-shift="SAKIT"]>input{color:#ab5146}
+
+.day-card[data-shift="CUTI"] > .shift-picker{color:#24619d}
+.day-card[data-shift="SAKIT"] > .shift-picker{color:#ab5146}
+.month-photo-grid .day-card > .shift-picker{width:100%;min-width:0;min-height:44px}
+.shift-picker{appearance:auto;-webkit-appearance:menulist}
+@media (max-width:760px){.month-photo-grid .day-card > .shift-picker,#camera-shift,#mini-shift,#custom-shift-input{font-size:16px}}
 </style>
   
 </head>
@@ -215,7 +221,7 @@
           <label>Petugas<select id="camera-person"><option value="">Pilih petugas</option></select></label>
           <div class="button-row"><button id="camera-add-person" class="text-button">＋ Tambah petugas</button><button class="text-button" data-page="petugas">Kelola petugas</button></div>
           <label>Tanggal catatan<input id="camera-date" type="date" required></label>
-          <label>Dinas<input id="camera-shift" type="text" list="shift-suggestions" maxlength="60" placeholder="Pilih / ketik dinas"></label>
+          <label>Dinas<select id="camera-shift" class="shift-picker"><option value="">Pilih dinas</option><option value="PAGI">PAGI</option><option value="SIANG">SIANG</option><option value="MALAM">MALAM</option><option value="LIBUR">LIBUR</option><option value="CUTI">CUTI</option><option value="SAKIT">SAKIT</option><option value="__dinas_lain__">Dinas lainnya…</option></select></label>
           <label>Jam catatan<input id="camera-time" type="time" step="1" required></label>
           <p id="time-hint" class="field-hint"></p><p class="field-hint" id="camera-schedule"></p>
           <details id="photo-settings" class="photo-settings"><summary>Koordinat</summary><label class="check-row"><input type="checkbox" id="random-coordinates"> Acak 3 digit akhir koordinat</label><p id="coordinate-reference" class="field-hint">Titik referensi: -6.1332972, 106.819059.</p></details>
@@ -229,14 +235,14 @@
   </div>
 
 
-  <datalist id="shift-suggestions"><option value="PAGI"><option value="SIANG"><option value="MALAM"><option value="LIBUR"></datalist>
   <dialog id="person-dialog"><form id="person-form" novalidate><div class="dialog-heading"><h2 id="person-title">Tambah petugas</h2><button type="button" class="close" data-close="person-dialog" aria-label="Tutup">×</button></div><input id="person-id" type="hidden"><label>Nama<input id="person-name" required maxlength="60" autocomplete="name" placeholder="Nama lengkap"></label><label>NIPP<input id="person-nipp" maxlength="60" type="text" placeholder="Bisa diketik bebas atau dikosongkan"></label><label>Jabatan<input id="person-role" type="text" maxlength="60" placeholder="Ketik jabatan bebas"></label><p id="person-message" class="form-message" role="alert" hidden></p><button id="save-person" type="submit" class="primary full">Simpan petugas</button></form></dialog>
   <dialog id="history-dialog" class="photo-dialog"><div class="dialog-heading"><h2>Foto IMO</h2><button class="close" data-close="history-dialog" aria-label="Tutup">×</button></div><img id="history-image" alt="Hasil foto IMO"><p id="history-details" class="field-hint"></p><div class="button-row"><button id="history-download" class="primary">Unduh</button><button id="history-share" class="secondary">Bagikan</button><button id="history-delete" class="danger">Hapus</button></div></dialog>
   <dialog id="handover-import" class="handover-import-dialog"><div class="dialog-heading"><h2 id="handover-import-title">Pasangkan serah terima</h2><button id="handover-import-close" class="close" data-close="handover-import" aria-label="Tutup">×</button></div><p id="handover-import-message" class="field-hint" role="status"></p><div id="handover-import-list" class="handover-import-list"></div><div class="dialog-footer"><span id="handover-import-count" class="field-hint" aria-live="polite"></span><button id="save-handovers" class="primary" type="button">Simpan serah terima</button></div></dialog>
   <dialog id="handover-view" class="photo-dialog"><div class="dialog-heading"><h2 id="handover-view-title">Serah terima</h2><button class="close" data-close="handover-view" aria-label="Tutup">×</button></div><img id="handover-view-image" alt="Dokumen serah terima"><p id="handover-view-details" class="field-hint"></p><div class="button-row"><button id="handover-download" class="primary">Unduh halaman</button><button id="handover-delete" class="danger">Hapus halaman</button></div></dialog>
   <input id="handover-input" type="file" accept="application/pdf,image/*" multiple hidden>
   <dialog id="handover-camera" class="mini-camera-dialog"><div class="dialog-heading"><h2 id="handover-camera-title">Foto serah terima</h2><button class="close" data-close="handover-camera" aria-label="Tutup kamera">×</button></div><p id="handover-camera-owner" class="field-hint"></p><div id="handover-camera-stage" class="mini-stage"><video id="handover-camera-video" playsinline autoplay muted hidden></video><img id="handover-camera-result" alt="Foto dokumen serah terima" hidden><div id="handover-camera-placeholder">Membuka kamera…</div></div><div class="mini-actions"><button id="handover-camera-switch" class="secondary" aria-label="Ganti kamera">↻</button><button id="handover-camera-capture" class="primary" disabled>Ambil &amp; simpan foto</button></div><p id="handover-camera-status" class="field-hint" role="status"></p><div class="mini-recovery"><button id="handover-camera-retry" class="text-button" hidden>Coba kamera lagi</button><button id="handover-camera-download" class="secondary" hidden>Unduh foto</button><button id="handover-camera-native" class="text-button">Kamera HP</button></div><input id="handover-native-input" type="file" accept="image/*" capture="environment" hidden></dialog>
-  <dialog id="mini-camera" class="mini-camera-dialog"><div class="dialog-heading"><h2 id="mini-title">Ambil foto</h2><button class="close" data-close="mini-camera" aria-label="Tutup kamera">×</button></div><div class="mini-fields"><label>Dinas<input id="mini-shift" type="text" list="shift-suggestions" maxlength="60" placeholder="Pilih / ketik dinas"></label><label>Jam catatan<input id="mini-time" type="time" step="1"></label></div><div id="mini-stage" class="mini-stage"><video id="mini-video" playsinline autoplay muted hidden></video><img id="mini-result" alt="Foto yang baru diambil" hidden><div id="mini-placeholder">Membuka kamera…</div></div><div class="mini-actions"><button id="mini-switch" class="secondary" aria-label="Ganti kamera">↻</button><button id="mini-capture" class="primary" disabled>Ambil &amp; simpan foto</button></div><p id="mini-status" class="field-hint" role="status"></p><div class="mini-recovery"><button id="mini-retry" class="text-button" hidden>Coba kamera lagi</button><button id="mini-download" class="secondary" hidden>Unduh foto</button></div></dialog>
+  <dialog id="custom-shift-dialog" aria-labelledby="custom-shift-title"><form id="custom-shift-form"><div class="dialog-heading"><h2 id="custom-shift-title">Dinas lainnya</h2><button type="button" class="close" data-close="custom-shift-dialog" aria-label="Tutup">×</button></div><label>Nama dinas<input id="custom-shift-input" type="text" maxlength="60" placeholder="Contoh: STANDBY" autocomplete="off" required autofocus></label><div class="button-row"><button type="button" class="secondary" data-close="custom-shift-dialog">Batal</button><button type="submit" class="primary">Pakai dinas</button></div></form></dialog>
+  <dialog id="mini-camera" class="mini-camera-dialog"><div class="dialog-heading"><h2 id="mini-title">Ambil foto</h2><button class="close" data-close="mini-camera" aria-label="Tutup kamera">×</button></div><div class="mini-fields"><label>Dinas<select id="mini-shift" class="shift-picker"><option value="">Pilih dinas</option><option value="PAGI">PAGI</option><option value="SIANG">SIANG</option><option value="MALAM">MALAM</option><option value="LIBUR">LIBUR</option><option value="CUTI">CUTI</option><option value="SAKIT">SAKIT</option><option value="__dinas_lain__">Dinas lainnya…</option></select></label><label>Jam catatan<input id="mini-time" type="time" step="1"></label></div><div id="mini-stage" class="mini-stage"><video id="mini-video" playsinline autoplay muted hidden></video><img id="mini-result" alt="Foto yang baru diambil" hidden><div id="mini-placeholder">Membuka kamera…</div></div><div class="mini-actions"><button id="mini-switch" class="secondary" aria-label="Ganti kamera">↻</button><button id="mini-capture" class="primary" disabled>Ambil &amp; simpan foto</button></div><p id="mini-status" class="field-hint" role="status"></p><div class="mini-recovery"><button id="mini-retry" class="text-button" hidden>Coba kamera lagi</button><button id="mini-download" class="secondary" hidden>Unduh foto</button></div></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <noscript>Aplikasi memerlukan JavaScript. Aktifkan JavaScript di browser.</noscript>
 
@@ -631,7 +637,7 @@ async function initializeStations(){
 function stationSlug(station){return (station.code||station.name).normalize('NFKD').replace(/[^A-Za-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40)||'STASIUN';}
 function renderStationUI(){
   const station=currentStation();$('station-brand').textContent='JAKG';$('station-brand-name').textContent=stationUPT(station);$('calendar-title').textContent='IMO JAKG';$('coordinate-reference').textContent=`Titik referensi: ${station.lat}, ${station.lng}. Opsi acak mengubah tiga digit akhir koordinat.`;document.title='IMO JAKG · Jakarta Gudang';
-  const shifts=[...new Set([...SHIFTS,...state.schedules.map(row=>row.shift)])];$('shift-suggestions').replaceChildren();shifts.forEach(shift=>$('shift-suggestions').append(new Option(shift,shift)));$('random-coordinates').checked=!!state.settings.random;
+  $('random-coordinates').checked=!!state.settings.random;
 }
 function updateClock(){const now=new Date();$('clock').textContent=now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'});if(state.db&&state.day!==key(now)){if(!state.cameraPicked)$('camera-date').value=key(now);state.day=key(now);renderCalendar();autoShift();}if(state.db&&(state.page==='kamera'||$('mini-camera').open)&&!state.timeManual)refreshTime();}
 function discardBulk(){if(!state.bulkDirty)return true;if(!confirm('Input bulanan belum disimpan. Tinggalkan perubahan ini?'))return false;state.bulkDirty=false;state.bulkContext='';return true;}
@@ -642,7 +648,47 @@ function renderCalendar(){
   $('claim-legacy').hidden=!p||!state.schedules.some(s=>inStation(s)&&s.personId==='__legacy__');renderBulk();renderHandovers();renderMonthlySmartcards();
 }
 function setTimeBounds(input,shift){const r=shiftRange(shift);input.disabled=!r;if(r){input.min=`${pad(Math.floor(r[0]/3600))}:00:00`;input.max=`${pad(Math.floor((r[1]-1)/3600))}:59:59`;}else{input.removeAttribute('min');input.removeAttribute('max');input.value='';}}
-function shiftOptions(selected){const input=element('input');input.type='text';input.maxLength=60;input.setAttribute('list','shift-suggestions');input.placeholder='Pilih / ketik dinas';input.value=selected||'';return input;}
+// Native select opens the system picker on phones, including Safari on iOS.
+const CUSTOM_SHIFT='__dinas_lain__';
+let customShiftTarget=null;
+function setShiftPickerValue(select, value){
+  const shift=normalizeShift(value);
+  const choices=[new Option('Pilih dinas',''),...SHIFTS.map(shift=>new Option(shift,shift))];
+  if(shift&&!SHIFTS.includes(shift))choices.push(new Option(shift,shift));
+  choices.push(new Option('Dinas lainnya…',CUSTOM_SHIFT));
+  select.replaceChildren(...choices);
+  select.value=shift;
+  select.dataset.shiftValue=shift;
+}
+function bindShiftPicker(select){
+  select.addEventListener('change',event=>{
+    if(select.value!==CUSTOM_SHIFT){select.dataset.shiftValue=select.value;return;}
+    event.stopImmediatePropagation();
+    const previous=select.dataset.shiftValue||'';
+    setShiftPickerValue(select,previous);
+    customShiftTarget=select;
+    const input=$('custom-shift-input');
+    input.value=SHIFTS.includes(previous)?'':previous;
+    input.setCustomValidity('');
+    $('custom-shift-dialog').showModal();
+  });
+}
+function shiftOptions(selected){const select=element('select','shift-picker');setShiftPickerValue(select,selected);bindShiftPicker(select);return select;}
+function bindCustomShift(){
+  for(const id of ['camera-shift','mini-shift'])bindShiftPicker($(id));
+  on('custom-shift-input','input',e=>e.target.setCustomValidity(''));
+  on('custom-shift-dialog','close',()=>{if(!$('custom-shift-dialog').open)customShiftTarget=null;});
+  on('custom-shift-form','submit',event=>{
+    event.preventDefault();
+    const input=$('custom-shift-input'),shift=normalizeShift(input.value),target=customShiftTarget;
+    if(!validShift(shift)){input.setCustomValidity('Isi nama dinas, maksimal 60 karakter.');input.reportValidity();return;}
+    customShiftTarget=null;
+    $('custom-shift-dialog').close();
+    if(!target?.isConnected||target.disabled)return;
+    setShiftPickerValue(target,shift);
+    target.dispatchEvent(new Event('change',{bubbles:true}));
+  });
+}
 function colorShift(card,shift){if(shift&&!SHIFTS.includes(shift)){let hue=0;for(const char of shift)hue=(hue*31+char.charCodeAt(0))%360;card.style.backgroundColor=`hsl(${hue} 65% 96%)`;card.style.borderTopColor=`hsl(${hue} 50% 53%)`;}}
 function latestDatePhoto(date,pid=state.rosterPerson){const row=schedule(date,pid);return state.photos.filter(p=>inStation(p)&&p.date===date&&(p.personId===pid||!p.personId&&p.nipp===person(pid)?.nipp)&&(isNonDuty(row?.shift)?p.source==='leave'&&p.shift===row.shift:p.source!=='leave')).sort((a,b)=>b.created-a.created)[0];}
 function showPhoto(photo){state.history=photo;$('history-image').src=photo.data;$('history-details').textContent=`Catatan: ${timeLabel(new Date(photo.printedAt||photo.created))}`;$('history-dialog').showModal();}
@@ -655,7 +701,7 @@ async function saveCardShift(date,shift,time='',refresh=true){
 function setCameraDate(date){const pid=requireRoster(),row=schedule(date,pid);if(!person(pid))throw new Error('Pilih petugas terlebih dahulu.');if(!row?.shift)throw new Error('Pilih dinas pada tanggal ini terlebih dahulu.');$('camera-person').value=pid;state.cameraPicked=date;autoShift(date);return row;}
 async function cameraFromCard(date){
   const pid=requireRoster();if(!person(pid))throw new Error('Pilih petugas terlebih dahulu.');const row=schedule(date,pid);if(isNonDuty(row?.shift)){showPhoto(await ensureLeaveTemplate(row));return;}
-  stopCamera();$('camera-person').value=pid;state.cameraPicked=date;state.miniDate=date;autoShift(date);$('mini-title').textContent=dateLabel(parseDate(date),{day:'numeric',month:'long',year:'numeric'});$('mini-shift').value=row?.shift||'';$('mini-time').value=$('camera-time').value;$('mini-result').hidden=true;$('mini-download').hidden=true;$('mini-status').textContent='Foto akan tersimpan di rekap tanggal ini.';$('mini-placeholder').textContent='Membuka kamera…';$('mini-placeholder').hidden=false;$('mini-camera').showModal();
+  stopCamera();$('camera-person').value=pid;state.cameraPicked=date;state.miniDate=date;autoShift(date);$('mini-title').textContent=dateLabel(parseDate(date),{day:'numeric',month:'long',year:'numeric'});setShiftPickerValue($('mini-shift'),row?.shift);$('mini-time').value=$('camera-time').value;$('mini-result').hidden=true;$('mini-download').hidden=true;$('mini-status').textContent='Foto akan tersimpan di rekap tanggal ini.';$('mini-placeholder').textContent='Membuka kamera…';$('mini-placeholder').hidden=false;$('mini-camera').showModal();
   try{await startCamera('mini');}catch(error){$('mini-status').textContent=errorText(error);$('mini-placeholder').textContent='Kamera belum aktif';$('mini-retry').hidden=false;}
 }
 function updateMiniReady(){const ready=!!state.stream&&$('mini-video').videoWidth>0&&!!shiftRange($('camera-shift').value);$('mini-capture').disabled=!ready;$('mini-switch').disabled=!state.stream;}
@@ -675,8 +721,8 @@ function renderBulk(){
     upload.addEventListener('click',async()=>{try{const current=schedule(date);if(isNonDuty(current?.shift))downloadPhoto(latestDatePhoto(date)||await ensureLeaveTemplate(current));else uploadFromCard(date);}catch(error){hint.textContent=errorText(error);}});
     capture.addEventListener('click',async()=>{try{await cameraFromCard(date);}catch(error){hint.textContent=errorText(error);}});actions.append(upload,capture);
     const fields=element('div','day-fields direct-time'),label=element('label','', 'Jam catatan'),time=element('input','day-time');time.type='time';time.step='1';time.id=`bulk-time-${date}`;time.value=entry?.time||(photo?clockTime(new Date(photo.printedAt||photo.created)):'');setTimeBounds(time,entry?.shift);label.append(time);fields.append(label);
-    const refreshCard=()=>{const row=schedule(date),current=latestDatePhoto(date);select.value=row?.shift||'';card.dataset.shift=row?.shift||'';card.style.backgroundColor='';card.style.borderTopColor='';colorShift(card,row?.shift);card.classList.toggle('is-leave',isNonDuty(row?.shift));card.classList.toggle('has-photo',!!current);header.children[1].textContent=current?'Terisi':'Kosong';setTimeBounds(time,row?.shift);time.value=row?.time||(current?.source!=='leave'&&current?clockTime(new Date(current.printedAt||current.created)):'');upload.disabled=!person(state.rosterPerson)||!row?.shift;upload.textContent=isNonDuty(row?.shift)?'Unduh template':'Pilih / ganti foto';capture.textContent=isNonDuty(row?.shift)?'Buat template':'Ambil foto';hint.textContent=isNonDuty(row?.shift)?`Template ${row.shift} ${stationUPT(currentStation())}`:current?'Foto tersimpan':'Pilih dinas dan foto di bawah';preview.replaceChildren();if(current){const img=element('img','day-image');img.src=current.data;img.alt=`IMO ${date}`;img.loading='lazy';preview.append(img);}else preview.append(element('span','day-placeholder','Belum ada foto'));};
-    select.addEventListener('change',async()=>{try{await saveCardShift(date,select.value,'',false);refreshCard();}catch(error){hint.textContent=errorText(error);}});time.addEventListener('change',async()=>{try{const current=latestDatePhoto(date);if(time.value&&current&&current.source!=='leave')await reStampPhoto(current,time.value);await saveCardShift(date,select.value,time.value,false);refreshCard();}catch(error){hint.textContent=errorText(error);}});
+    const refreshCard=()=>{const row=schedule(date),current=latestDatePhoto(date);setShiftPickerValue(select,row?.shift);card.dataset.shift=row?.shift||'';card.style.backgroundColor='';card.style.borderTopColor='';colorShift(card,row?.shift);card.classList.toggle('is-leave',isNonDuty(row?.shift));card.classList.toggle('has-photo',!!current);header.children[1].textContent=current?'Terisi':'Kosong';setTimeBounds(time,row?.shift);time.value=row?.time||(current?.source!=='leave'&&current?clockTime(new Date(current.printedAt||current.created)):'');upload.disabled=!person(state.rosterPerson)||!row?.shift;upload.textContent=isNonDuty(row?.shift)?'Unduh template':'Pilih / ganti foto';capture.textContent=isNonDuty(row?.shift)?'Buat template':'Ambil foto';hint.textContent=isNonDuty(row?.shift)?`Template ${row.shift} ${stationUPT(currentStation())}`:current?'Foto tersimpan':'Pilih dinas dan foto di bawah';preview.replaceChildren();if(current){const img=element('img','day-image');img.src=current.data;img.alt=`IMO ${date}`;img.loading='lazy';preview.append(img);}else preview.append(element('span','day-placeholder','Belum ada foto'));};
+    select.addEventListener('change',async()=>{try{await saveCardShift(date,select.value,'',false);refreshCard();}catch(error){refreshCard();hint.textContent=errorText(error);}});time.addEventListener('change',async()=>{try{const current=latestDatePhoto(date);if(time.value&&current&&current.source!=='leave')await reStampPhoto(current,time.value);await saveCardShift(date,select.value,time.value,false);refreshCard();}catch(error){hint.textContent=errorText(error);}});
     card.append(header,select,preview,hint,actions,fields);$('bulk-rows').append(card);
   }
   $('bulk-status').textContent=person(state.rosterPerson)?'Pilihan dinas langsung tersimpan.':'Tambah atau pilih petugas terlebih dahulu.';
@@ -692,7 +738,7 @@ function renderHandovers(){
   $('handover-photo-count').textContent=`${pages} halaman serah terima · ${filled} tanggal`;$('handover-pair-count').textContent=`${paired} tanggal lengkap dengan IMO${leaveDays?' · '+leaveDays+' tidak dinas':''}`;
 }
 async function saveBulk(){
-  const personId=requireRoster(),fields=[...$('bulk-rows').querySelectorAll('input[data-date]')],ids=fields.map(el=>stationScheduleId(personId,el.dataset.date)),rows=[];
+  const personId=requireRoster(),fields=[...$('bulk-rows').querySelectorAll('select.shift-picker[data-date]')],ids=fields.map(el=>stationScheduleId(personId,el.dataset.date)),rows=[];
   for(const el of fields){const shift=normalizeShift(el.value);if(!shift)continue;if(!validShift(shift))throw new Error('Dinas maksimal 60 karakter.');const date=el.dataset.date,time=isNonDuty(shift)?'':$(`bulk-time-${date}`).value;if(time&&!inShift(time,shift))throw new Error(`Jam tanggal ${date} tidak sesuai dinas.`);rows.push({id:stationScheduleId(personId,date),personId,stationId:currentStation().id,date,shift,note:schedule(date)?.note||'',time});}
   await write(['rosters'],tx=>{const store=tx.objectStore('rosters');ids.forEach(id=>store.delete(id));rows.forEach(row=>store.put(row));});state.schedules=state.schedules.filter(s=>!ids.includes(s.id)).concat(rows);state.bulkDirty=false;state.bulkContext='';for(const row of rows)if(isNonDuty(row.shift)&&person(row.personId))await ensureLeaveTemplate(row);renderCalendar();autoShift();toast('Jadwal satu bulan petugas tersimpan.');
 }
@@ -736,8 +782,8 @@ function refreshTime(force=false){
   if($('mini-camera').open||state.miniDate){$('mini-time').value=input.value;setTimeBounds($('mini-time'),shift);}updateMiniReady();
 }
 function autoShift(date=state.cameraPicked||$('camera-date').value||key(new Date())){
-  const pid=$('camera-person').value,entry=schedule(date,pid);$('camera-date').value=date;$('camera-shift').value=entry?.shift||'';
-  $('camera-schedule').textContent=entry?`Jadwal ${person(pid)?.name||'petugas'} · ${dateLabel(parseDate(date),{day:'numeric',month:'long'})} · ${HOURS[entry.shift]||entry.shift}`:'Tanggal ini belum diisi. Pilih atau ketik dinas.';
+  const pid=$('camera-person').value,entry=schedule(date,pid);$('camera-date').value=date;setShiftPickerValue($('camera-shift'),entry?.shift);
+  $('camera-schedule').textContent=entry?`Jadwal ${person(pid)?.name||'petugas'} · ${dateLabel(parseDate(date),{day:'numeric',month:'long'})} · ${HOURS[entry.shift]||entry.shift}`:'Tanggal ini belum diisi. Pilih dinas dari menu.';
   state.timeManual=!!entry?.time;$('camera-time').value=entry?.time||'';refreshTime();
 }
 
@@ -746,7 +792,7 @@ function revokeURLs(){state.urls.forEach(URL.revokeObjectURL);state.urls=[];}
 function dataBlob(data){const [meta,base64]=data.split(',');const binary=atob(base64),bytes=new Uint8Array(binary.length);for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);return new Blob([bytes],{type:meta.match(/data:(.*);/)[1]});}
 function renderHistory(){revokeURLs();const list=$('history-list');list.replaceChildren();const month=$('history-month').value;const pid=$('history-person').value;const photos=state.photos.filter(p=>inStation(p)&&(!month||p.date.startsWith(month))&&(!pid||p.personId===pid||!p.personId&&p.nipp===person(pid)?.nipp)).sort((a,b)=>b.created-a.created);if(!photos.length){empty(list,'Belum ada foto bulan ini','Ambil foto IMO untuk mulai mengisi riwayat.');return;}for(const p of photos){const card=element('button','history-card'),img=element('img');const url=URL.createObjectURL(dataBlob(p.data));state.urls.push(url);img.src=url;img.alt=`IMO ${p.name} ${p.shift}`;img.loading='lazy';card.append(img,element('strong','',p.name),element('p','',`${dateLabel(parseDate(p.date),{day:'numeric',month:'short'})} · ${p.shift}`));card.addEventListener('click',()=>{state.history=p;$('history-image').src=p.data;$('history-details').textContent=`Catatan: ${timeLabel(new Date(p.printedAt||p.created))} · Pengambilan/pemrosesan: ${timeLabel(new Date(p.created))}`;$('history-dialog').showModal();});list.append(card);}}
 function cameraIdentity(){
-  const p=person($('camera-person').value);if(!p)throw new Error('Pilih atau tambah petugas terlebih dahulu.');const shift=normalizeShift($('camera-shift').value);$('camera-shift').value=shift;if(!validShift(shift))throw new Error('Isi dinas, maksimal 60 karakter.');if(isNonDuty(shift))throw new Error(`Tanggal ${shift} memakai template otomatis.`);
+  const p=person($('camera-person').value);if(!p)throw new Error('Pilih atau tambah petugas terlebih dahulu.');const shift=normalizeShift($('camera-shift').value);setShiftPickerValue($('camera-shift'),shift);if(!validShift(shift))throw new Error('Isi dinas, maksimal 60 karakter.');if(isNonDuty(shift))throw new Error(`Tanggal ${shift} memakai template otomatis.`);
   refreshTime();const date=$('camera-date').value,time=$('camera-time').value;if(!inShift(time,shift))throw new Error('Jam catatan harus sesuai rentang dinas.');
   return {p:{...p},personId:p.id,station:{...currentStation()},stationId:currentStation().id,shift,recordedAt:recordedDate(date,time),timeMode:state.timeManual?'manual':'auto'};
 }
@@ -900,6 +946,7 @@ async function importBackup(file){
   await load();await initializeStations();state.rosterPerson='';state.bulkDirty=false;state.bulkContext='';state.cameraPicked='';state.result=null;$('camera-date').value=key(new Date());$('result-actions').hidden=true;$('preview-canvas').hidden=true;$('camera-placeholder').hidden=false;$('random-coordinates').checked=false;renderPeople();renderCalendar();renderHistory();autoShift();toast('Cadangan berhasil dipulihkan.');
 }
 function bind(){
+  bindCustomShift();
   document.querySelectorAll('[data-page]').forEach(button=>button.addEventListener('click',()=>{location.hash=button.dataset.page;navigate(button.dataset.page);}));window.addEventListener('hashchange',()=>navigate(location.hash.slice(1)));
   document.querySelectorAll('[data-close]').forEach(button=>button.addEventListener('click',()=>$(button.dataset.close).close()));
   const changeMonth=next=>{if(!discardBulk())return;state.month=next;state.bulkContext='';renderCalendar();};
@@ -910,9 +957,9 @@ function bind(){
 
   on('bulk-form','submit',async e=>{e.preventDefault();await saveBulk();});
   on('add-person','click',()=>openPerson());on('camera-add-person','click',()=>openPerson());on('person-form','submit',async e=>{e.preventDefault();await savePerson();});on('save-person','click',async e=>{e.preventDefault();await savePerson();});
-  on('camera-person','change',async()=>{await selectRoster($('camera-person').value);autoShift();});on('camera-date','change',()=>{state.cameraPicked=$('camera-date').value;autoShift(state.cameraPicked);});on('camera-shift','change',()=>{$('camera-shift').value=normalizeShift($('camera-shift').value);if(isNonDuty($('camera-shift').value))stopCamera();$('camera-schedule').textContent='Dinas dipilih manual untuk tanggal ini.';$('camera-time').value='';refreshTime(true);});on('camera-time','input',()=>{state.timeManual=true;});
+  on('camera-person','change',async()=>{await selectRoster($('camera-person').value);autoShift();});on('camera-date','change',()=>{state.cameraPicked=$('camera-date').value;autoShift(state.cameraPicked);});on('camera-shift','change',()=>{setShiftPickerValue($('camera-shift'),$('camera-shift').value);if(isNonDuty($('camera-shift').value))stopCamera();$('camera-schedule').textContent='Dinas dipilih manual untuk tanggal ini.';$('camera-time').value='';refreshTime(true);});on('camera-time','input',()=>{state.timeManual=true;});
   on('camera-time','change',async()=>{state.timeManual=true;const photo=state.result;if(photo&&photo.source!=='leave'&&photo.personId===$('camera-person').value&&photo.date===$('camera-date').value){const updated=await reStampPhoto(photo,$('camera-time').value),img=new Image();img.src=updated.data;await img.decode();$('preview-canvas').getContext('2d').drawImage(img,0,0,$('preview-canvas').width,$('preview-canvas').height);state.bulkContext='';renderCalendar();}});
-  on('mini-shift','change',async()=>{const shift=normalizeShift($('mini-shift').value);$('mini-shift').value=shift;$('camera-shift').value=shift;state.timeManual=false;$('camera-time').value='';refreshTime(true);if(shift)await saveCardShift(state.miniDate,shift);$('mini-status').textContent=shift?'Ambil foto — langsung tersimpan.':'Pilih dinas terlebih dahulu.';updateMiniReady();});
+  on('mini-shift','change',async()=>{const shift=normalizeShift($('mini-shift').value);setShiftPickerValue($('mini-shift'),shift);setShiftPickerValue($('camera-shift'),shift);state.timeManual=false;$('camera-time').value='';refreshTime(true);if(shift)await saveCardShift(state.miniDate,shift);$('mini-status').textContent=shift?'Ambil foto — langsung tersimpan.':'Pilih dinas terlebih dahulu.';updateMiniReady();});
   on('mini-time','input',()=>{state.timeManual=true;$('camera-time').value=$('mini-time').value;});on('mini-capture','click',capture);
   on('mini-switch','click',async()=>{state.facing=state.facing==='user'?'environment':'user';try{await startCamera('mini');}catch(error){$('mini-status').textContent=errorText(error);}});on('mini-retry','click',async()=>{try{await startCamera('mini');}catch(error){$('mini-status').textContent=errorText(error);}});on('mini-download','click',()=>downloadPhoto(state.result));
   for(const event of ['loadedmetadata','canplay']){on('mini-video',event,()=>{syncMediaRatio();updateMiniReady();});on('camera-video',event,syncMediaRatio);}
